@@ -9,12 +9,15 @@
 
 %}
 /* Tokens utilizados para la deteccion del analizador*/
+%token Cadena
+%token Caracter
+%token flotanega
+%token negaente
 %token flotante
 %token nentero
 %token Identificador
 %token tipodato
 %token logico
-
 %token negaent
 
 %%
@@ -22,19 +25,21 @@
 
 /* Gramatica */
 program:
-        program declarar '\n' {sum++; }
-        | 
+        program declarar '\n' {sum++; printf(" Aceptadoo %d",sum); }
+        |
         ;
 
 
 
 
 declarar:
-        asigna
+        asigna 
         | tipodato asigna           
         | tipodato asigna ',' declarar
-        | tipodato asigna '(' declarar ')' '{'
-        | 
+        | ',' declarar
+        | tipodato asigna '(' declarar ')' 
+        | asigna ',' declarar
+
         ;
 
 
@@ -42,7 +47,6 @@ declarar:
 asigna: 
         expr
         |   Identificador '=' expr
-        |   Identificador comparacion expr
         ;
 
 
@@ -56,22 +60,29 @@ expr:
 term:
         factor
         |   factor '*' term
+        |  factor '/' term
         ;
+
 
 factor:
         iden
+        | '(' declarar ')' declarar
+        | '(' declarar ')'
         ;
 
-comparacion:
-                logico
-                ;
+
 
 iden:  
-        Identificador
-        |   nentero
+        nentero  
+        |   flotanega
+        |   negaente
         |   flotante
+        |   Cadena
+        |   Caracter
+        |  Identificador
+        | error  { printf("error ");}
+        |
         ;
-
 
 
 
@@ -91,7 +102,6 @@ void yyerror(char *s){
     fputs(cadena , fichero2); 
      /*printf ("%s",cadena);  */
     fclose(fichero2);
-    yyparse();
 
 
 }

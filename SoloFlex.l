@@ -8,15 +8,17 @@
 /* Generacion de tokens*/
 %}
  
-Caracter     \"[a-z]\"
-Cadena      \"[a-z0-9A-Z]+\"
+Caracter     \'[a-z0-9A-Z]\'
+Cadena      \"[a-z0-9A-Z\t ]*\"
 Identificador   [a-zA-Z][_]*[a-zA-Z0-9]*
 digito      [0-9] 
-flotante      {nentero}\.{digito}*              
+flotanega      "\-"{flotante} 
+flotante      {nentero}\.{digito}*   
+negaente        "\-"{nentero}      
 nentero     {digito}+  
 Operador      [=*+/-]*
 Reservado   (if)|(for)|(while)
-tipodato    (int)|(float)|(bolean)
+tipodato    (int)|(float)|(bolean)|(String)|(char)
 logico      (>=)|(<=)|(==)|(!=)|(>)|(<)
 negaent     "-"{digito}+ 
 
@@ -28,6 +30,20 @@ negaent     "-"{digito}+
 
 
 %%
+
+
+
+
+{flotanega}           { 
+    char cadena[128] = "Numero flotante negativo  : ";
+    FILE* fichero;
+    fichero = fopen("SalidaFlex.txt", "a");  
+    strcat(cadena, yytext);  
+    strcat(cadena, "\n"); 
+    fputs(cadena , fichero); 
+     /*printf ("%s",cadena); */
+    fclose(fichero);
+    return flotanega;}
 
 {flotante}           { 
     char cadena[128] = "Numero flotante  : ";
@@ -41,7 +57,17 @@ negaent     "-"{digito}+
     return flotante;}
   
   
-
+{negaente}           { 
+    char cadena[128] = "Numero entero negativo  : ";
+    FILE* fichero;
+    fichero = fopen("SalidaFlex.txt", "a");  
+    strcat(cadena, yytext);  
+    strcat(cadena, "\n"); 
+    fputs(cadena , fichero); 
+     /*printf ("%s",cadena); */
+    fclose(fichero);
+    return negaente;}
+ 
 {nentero}           { 
     char cadena[128] = "Numero entero  : ";
     FILE* fichero;
@@ -79,6 +105,27 @@ negaent     "-"{digito}+
     fclose(fichero);
     return logico;}
 
+{Caracter}           { 
+    char cadena[128] = "Caracter  : ";
+    FILE* fichero;
+    fichero = fopen("SalidaFlex.txt", "a");  
+    strcat(cadena, yytext);  
+    strcat(cadena, "\n"); 
+    fputs(cadena , fichero); 
+     /*printf ("%s",cadena); */
+    fclose(fichero);
+    return Caracter;}
+
+{Cadena}           { 
+    char cadena[128] = "Cadena  : ";
+    FILE* fichero;
+    fichero = fopen("SalidaFlex.txt", "a");  
+    strcat(cadena, yytext);  
+    strcat(cadena, "\n"); 
+    fputs(cadena , fichero); 
+     /*printf ("%s",cadena); */
+    fclose(fichero);
+    return Cadena;}
 
 {Identificador}     {
     char cadena[128] = "Tipo identificador: ";
@@ -93,10 +140,16 @@ negaent     "-"{digito}+
 
 
 
-[\}\{]              return *yytext;
-[-+*=\(\),]      return *yytext;
 
-[ \t\n]       ;
+
+
+
+
+
+
+
+[-+*=\(\),\n]      return *yytext;
+
 .           {
     char cadena[128] = "Token no reconocido: ";
     FILE* fichero;

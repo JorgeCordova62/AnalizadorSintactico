@@ -1,0 +1,3 @@
+Tipo identificador: hola
+Token no reconocido:  
+Tipo identificador: mundo
