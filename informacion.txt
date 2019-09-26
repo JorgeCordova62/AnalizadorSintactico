@@ -1,0 +1,9 @@
+int hola
+float hola2
+hola mundo
+int hola = 66
+hola int
+55
+
+
+Mundo hola = 3
